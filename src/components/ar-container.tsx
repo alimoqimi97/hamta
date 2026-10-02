@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import MindARViewer from './mindar-viewer';
+import ArVideoViewer from './ar-video-viewer';
 // import MindARThreeViewer from './mindar-three-viewer';
 
 function ARContainer() {
     const [started, setStarted] = useState("");
 
     return (
-        <div className="App">
+        <div >
             <h1>Example React component with <a href="https://github.com/hiukim/mind-ar-js" target="_blank">MindAR</a></h1>
 
             <div className="control-buttons">
@@ -19,7 +20,8 @@ function ARContainer() {
 
             {started === 'aframe' && (
                 <div className="container">
-                    <MindARViewer />
+                    {/* <MindARViewer /> */}
+                    <ArVideoViewer />
                     <video></video>
                 </div>
             )}

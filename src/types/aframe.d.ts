@@ -31,6 +31,10 @@ declare module 'react' {
         React.HTMLAttributes<HTMLElement>,
         HTMLElement
       >;
+      'a-video': React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLElement>,
+        HTMLElement
+      >;
     }
   }
 }
