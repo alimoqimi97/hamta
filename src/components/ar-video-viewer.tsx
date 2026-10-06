@@ -37,24 +37,36 @@ export default function ArVideoViewer() {
     });
 
 
+    // const handleFileChange = async (
+    //     event: React.ChangeEvent<HTMLInputElement>
+    // ) => {
+    //     const file = event.target.files?.[0];
 
-    useEffect(() => {
-        if (!window || !ready) return;
+    //     if (!file) return;
 
-        const compiler = new window.MINDAR.IMAGE.Compiler();
+    //     try {
+    //         await compileMindTargetFromFile(
+    //             file,
+    //             "my-target.mind",
+    //             (progress) => {
+    //                 console.log(`Progress: ${Math.round(progress * 100)}%`);
+    //             }
+    //         );
 
-        const dataList = await compiler.compileImageTargets(
-            [imageElement],
-            (progress) => {
-                console.log(progress);
-            }
-        );
+    //         console.log("Successfully generated .mind file");
+    //     } catch (error) {
+    //         console.error("Failed to compile target:", error);
+    //     }
+    // };
 
-        const exportedBuffer = await compiler.exportData();
+    // useEffect(() => {
+    //     if (!window || !ready) return;
+
+    //    handleFileChange()
 
 
 
-    }, [ready]);
+    // }, [ready]);
 
     if (error) {
         return (
@@ -214,61 +226,61 @@ export function useMindARVideo({
 }
 
 export async function compileMindTargetFromFile(
-  file: File,
-  fileName = "targets.mind",
-  onProgress?: (progress: number) => void
+    file: File,
+    fileName = "targets.mind",
+    onProgress?: (progress: number) => void
 ): Promise<void> {
-  if (!window.MINDAR.IMAGE.Compiler) {
-    throw new Error("MindAR Compiler is not loaded.");
-  }
+    if (!window.MINDAR.IMAGE.Compiler) {
+        throw new Error("MindAR Compiler is not loaded.");
+    }
 
-  const imageElement = new Image();
-  const imageUrl = URL.createObjectURL(file);
+    const imageElement = new Image();
+    const imageUrl = URL.createObjectURL(file);
 
-  try {
-    // Load the uploaded image
-    await new Promise<void>((resolve, reject) => {
-      imageElement.onload = () => resolve();
+    try {
+        // Load the uploaded image
+        await new Promise<void>((resolve, reject) => {
+            imageElement.onload = () => resolve();
 
-      imageElement.onerror = () => {
-        reject(new Error("Failed to load image."));
-      };
+            imageElement.onerror = () => {
+                reject(new Error("Failed to load image."));
+            };
 
-      imageElement.src = imageUrl;
-    });
+            imageElement.src = imageUrl;
+        });
 
-    // Create compiler
-    const compiler = new window.MINDAR.IMAGE.Compiler();
+        // Create compiler
+        const compiler = new window.MINDAR.IMAGE.Compiler();
 
-    // Compile image target
-    await compiler.compileImageTargets(
-      [imageElement],
-      (progress: number) => {
-        onProgress?.(progress);
-      }
-    );
+        // Compile image target
+        await compiler.compileImageTargets(
+            [imageElement],
+            (progress: number) => {
+                onProgress?.(progress);
+            }
+        );
 
-    // Export compiled target
-    const exportedBuffer = await compiler.exportData();
+        // Export compiled target
+        const exportedBuffer = await compiler.exportData();
 
-    // Convert ArrayBuffer to .mind file
-    const blob = new Blob([exportedBuffer], {
-      type: "application/octet-stream",
-    });
+        // Convert ArrayBuffer to .mind file
+        const blob = new Blob([exportedBuffer], {
+            type: "application/octet-stream",
+        });
 
-    // Download/save the .mind file
-    const downloadUrl = URL.createObjectURL(blob);
+        // Download/save the .mind file
+        const downloadUrl = URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.download = fileName;
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.download = fileName;
 
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
 
-    URL.revokeObjectURL(downloadUrl);
-  } finally {
-    URL.revokeObjectURL(imageUrl);
-  }
+        URL.revokeObjectURL(downloadUrl);
+    } finally {
+        URL.revokeObjectURL(imageUrl);
+    }
 }
